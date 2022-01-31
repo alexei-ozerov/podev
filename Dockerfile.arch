@@ -1,0 +1,41 @@
+from archlinux
+
+WORKDIR /usr/src/dev
+RUN mkdir -p /usr/src/dev/vmnt && mkdir -p ~/.config/nvim/lua/custom/plugins
+
+# Setup Deps
+RUN pacman -Syy && pacman -S git starship jq nodejs go neovim exa ripgrep base-devel --noconfirm
+
+# Add User & Configure Timezone
+RUN useradd -m docker -G wheel && echo "docker:docker" | chpasswd && chown -R docker /usr/src/dev
+RUN cat '/usr/share/zoneinfo/Canada/Eastern' > /etc/localtime
+
+ADD ./resources/bashrc /home/docker/bashrc
+RUN chown docker /home/docker/bashrc
+
+# User Setup
+USER docker
+
+# Setup Terminal
+RUN cat /home/docker/bashrc >> /home/docker/.bashrc && rm /home/docker/bashrc
+
+# Setup NeoVim
+RUN git clone https://github.com/NvChad/NvChad ~/.config/nvim && \
+  echo 'nvim -c "autocmd User PackerComplete quitall" -c "PackerSync"' >> nvconf.sh && \
+  chmod +x nvconf.sh
+
+USER root
+
+# Configure LSP
+ADD ./resources/chadrc.lua /home/docker/.config/nvim/lua/custom/chadrc.lua
+ADD ./resources/lspconfig.lua /home/docker/.config/nvim/lua/custom/plugins/lspconfig.lua
+RUN chown -R docker /home/docker/.config
+
+USER docker
+
+# Install Rust & Go Tooling
+RUN curl https://sh.rustup.rs -sSf | sh -s -- -y && \
+	curl -L https://github.com/rust-analyzer/rust-analyzer/releases/latest/download/rust-analyzer-x86_64-unknown-linux-gnu.gz | gunzip -c - > ~/.cargo/bin/rust-analyzer && \
+	chmod +x ~/.cargo/bin/rust-analyzer && \
+	go install golang.org/x/tools/gopls@latest && \
+	~/.cargo/bin/rustup component add rust-src

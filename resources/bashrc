@@ -1,0 +1,12 @@
+alias ls="exa"
+alias ll="exa -l"
+alias lt="exa -T --git-ignore"
+
+alias vim="nvim"
+alias k="kubectl"
+alias t="terraform"
+
+export PATH="~/.local/bin:$PATH"
+export PATH="~/go/bin:$PATH"
+
+eval "$(starship init bash)"
