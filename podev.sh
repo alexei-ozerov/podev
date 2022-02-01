@@ -1,5 +1,6 @@
 #!/bin/bash
 
+MOUNT_DIR=.
 DOCKERFILE=Dockerfile.arch
 TAG=dev/arch
 
@@ -34,7 +35,7 @@ Run()
 {
   echo -e "Attempting to stop any previously run containers of ${TAG}"
   podman rm --force $(podman container ls -a | grep ${TAG} | awk '{print $1}')
-  podman run -it -d --userns=keep-id -v /home/aozerov/projects:/usr/src/dev/vmnt:Z ${TAG} /bin/bash
+  podman run -it -d --userns=keep-id -v ${MOUNT_DIR}:/usr/src/dev/vmnt:Z ${TAG} /bin/bash
 }
 
 Clean()
