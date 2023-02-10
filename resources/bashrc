@@ -8,5 +8,6 @@ alias t="terraform"
 
 export PATH="~/.local/bin:$PATH"
 export PATH="~/go/bin:$PATH"
+export EDITOR="nvim"
 
 eval "$(starship init bash)"

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-MOUNT_DIR=.
+MOUNT_DIR=../.
 DOCKERFILE=Dockerfile.arch
 TAG=dev/arch
 CONFIG_FILE=.podev.conf
