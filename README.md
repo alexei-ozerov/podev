@@ -1,6 +1,6 @@
 # Podman Development Environment
 ## Building
-To build the environment, please make sure to have podman installed.
+To build the environment, please make sure to have podman or docker installed. While the script is intended to be used with podman, I have updated it to be able to also work with a docker installation.
 
 Run the following from the podev directory:
 ```
